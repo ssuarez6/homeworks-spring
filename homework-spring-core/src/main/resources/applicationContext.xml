@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       https://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+    <bean id="userDao" class="com.epam.homework2.dao.UserDao">
+        <property name="users" ref="inMemoryStorage" />
+    </bean>
+    <bean id="eventDao" class="com.epam.homework2.dao.EventDao">
+        <property name="events" ref="inMemoryStorage" />
+    </bean>
+    <bean id="ticketDao" class="com.epam.homework2.dao.TicketDao">
+        <property name="tickets" ref="inMemoryStorage" />
+    </bean>
+
+    <bean id="applicationConfig" class="com.epam.homework2.config.ApplicationConfig" />
+
+    <bean id="userService" class="com.epam.homework2.service.UserService">
+        <property name="dao" ref="userDao"/>
+    </bean>
+    <bean id="eventService" class="com.epam.homework2.service.EventService">
+        <property name="dao" ref="eventDao"/>
+    </bean>
+    <bean id="ticketService" class="com.epam.homework2.service.TicketService">
+        <property name="dao" ref="ticketDao"/>
+    </bean>
+
+    <bean id="bookingFacade" class="com.epam.homework2.facade.BookingFacadeImpl">
+        <constructor-arg ref="userService"/>
+        <constructor-arg ref="eventService"/>
+        <constructor-arg ref="ticketService"/>
+    </bean>
+
+    <bean id="inMemoryStorage" class="com.epam.homework2.dao.InMemoryStorage" />
+    <bean id="storageInitializer" class="com.epam.homework2.dao.StorageInitializer" />
+
+</beans>
