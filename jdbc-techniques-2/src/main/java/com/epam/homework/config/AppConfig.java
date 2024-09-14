@@ -9,14 +9,14 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import javax.sql.DataSource;
 
 @Configuration
-@ComponentScan(basePackages = {"com.epam.homework"})
+@ComponentScan(basePackages = "com.epam.homework")
 public class AppConfig {
 
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("org.postgresql.Driver");
-        dataSource.setUrl("jdbc:postgresql://localhost:5432/task1");
+        dataSource.setUrl("jdbc:postgresql://localhost:5432/task2");
         dataSource.setUsername("epamuser");
         dataSource.setPassword("password");
         return dataSource;
