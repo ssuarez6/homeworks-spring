@@ -26,11 +26,16 @@ public enum CustomType {
 
     public String generateRandom() {
         return switch (this) {
-            case INT -> Integer.toString(CustomType.faker.number().numberBetween(-100000, 100000));
-            case BOOLEAN -> Boolean.toString(CustomType.faker.bool().bool());
-            case TEXT -> String.format("'%s'",CustomType.faker.rockBand().name().replace("'", ""));
-            case REAL -> Double.toString(CustomType.faker.number().randomDouble(8, -100000, 100000));
-            case TIMESTAMP -> String.format("'%s'", formatter.format(CustomType.faker.date().birthday()));
+            case INT ->
+                    Integer.toString(CustomType.faker.number().numberBetween(-100000, 100000));
+            case BOOLEAN ->
+                    Boolean.toString(CustomType.faker.bool().bool());
+            case TEXT ->
+                    String.format("'%s'", CustomType.faker.rockBand().name().replace("'", ""));
+            case REAL ->
+                    Double.toString(CustomType.faker.number().randomDouble(8, -100000, 100000));
+            case TIMESTAMP ->
+                    String.format("'%s'", formatter.format(CustomType.faker.date().birthday()));
         };
     }
 }
