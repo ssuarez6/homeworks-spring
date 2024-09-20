@@ -20,7 +20,7 @@ public class DatabaseInit {
                     id SERIAL PRIMARY KEY,
                     name TEXT,
                     file_type TEXT,
-                    size BIGINT CHECK (size <= 200 * 1024 * 1024),
+                    size BIGINT CHECK (size <= 210 * 1024 * 1024),
                     content BYTEA NOT NULL
                 );
                 """;
