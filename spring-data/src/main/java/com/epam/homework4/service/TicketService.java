@@ -2,6 +2,7 @@ package com.epam.homework4.service;
 
 import com.epam.homework4.dao.TicketRepository;
 import com.epam.homework4.model.Ticket;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ public class TicketService {
 
     private EventService eventService;
 
+    @Transactional
     public Ticket bookTicket(Long userId, Long eventId, int place, Ticket.Category category) {
         var bookedTicketOptional = repo.findBookedTicket(userId, eventId, place, category);
 

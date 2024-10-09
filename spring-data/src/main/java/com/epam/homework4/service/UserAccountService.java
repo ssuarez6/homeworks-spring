@@ -2,6 +2,7 @@ package com.epam.homework4.service;
 
 import com.epam.homework4.dao.UserAccountRepository;
 import com.epam.homework4.model.UserAccount;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,11 +22,12 @@ public class UserAccountService {
         return repo.findByUserId(userId);
     }
 
+    @Transactional
     public UserAccount update(UserAccount userAccount) {
         var userAcc = repo.findById(userAccount.getId());
         if(userAcc.isEmpty()) throw new NullPointerException(String.format("UserAccount with id [%d] does not exist", userAccount.getId()));
 
-        return (UserAccount) repo.save(userAccount);
+        return repo.save(userAccount);
     }
 
     public UserAccount save(UserAccount userAccount) {

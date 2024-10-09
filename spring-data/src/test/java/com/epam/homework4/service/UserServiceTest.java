@@ -33,16 +33,25 @@ class UserServiceTest {
     @Test
     @DisplayName("should get an User by id")
     void getUserById() {
+        // Arrange
         var expectedUser = new User("Roger", "roger@example.com");
         expectedUser.setId(1);
         when(userRepository.findById(1L)).thenReturn(Optional.of(expectedUser));
+
+        // Act
         var user = service.getUserById(1L);
+
+        // Assert
         assertEquals(user.getName(), "Roger");
     }
 
     @Test
     @DisplayName("should throw an exception when an user is not found")
     public void getUser_throwException() {
+        // Arrange
+        when(userRepository.findById(100L)).thenReturn(Optional.empty());
+
+        // Act & Assert
         assertThrows(
                 NullPointerException.class,
                 () -> {
@@ -53,16 +62,25 @@ class UserServiceTest {
     @Test
     @DisplayName("should get an User by its email")
     void getUserByEmail() {
+        // Arrange
         var expected = new User("Rafa", "rafa@email.com");
         expected.setId(2L);
         when(userRepository.findByEmail("rafa@email.com")).thenReturn(Optional.of(expected));
+
+        // Act
         var user = service.getUserByEmail("rafa@email.com");
+
+        // Assert
         assertEquals(2L, user.getId());
     }
 
     @Test
     @DisplayName("should throw an exception when an user is not found by email")
     public void getByEmail_throwException() {
+        // Arrange
+        when(userRepository.findByEmail("bad@mail.com")).thenReturn(Optional.empty());
+
+        // Act & Assert
         assertThrows(
                 NullPointerException.class,
                 () -> {
@@ -73,12 +91,15 @@ class UserServiceTest {
     @Test
     @DisplayName("should get all Users by a name")
     void getUsersByName() {
+        // Arrange
         var mockUser = new User("foo", "foo@mail.com");
         var mockPage = new PageImpl<>(List.of(mockUser));
         when(userRepository.findByName("foo", PageRequest.of(0, 10))).thenReturn(mockPage);
 
+        // Act
         var result = service.getUsersByName("foo", 10, 0);
 
+        // Assert
         assertNotNull(result);
         assertEquals(1, result.size());
         assertEquals(mockUser.getEmail(), result.get(0).getEmail());
@@ -87,11 +108,14 @@ class UserServiceTest {
     @Test
     @DisplayName("should return empty list when no users are found")
     void getByName_returnEmptyList() {
+        // Arrange
         var mockPage = new PageImpl<User>(Collections.emptyList());
         when(userRepository.findByName("foo", PageRequest.of(0, 10))).thenReturn(mockPage);
 
+        // Act
         var result = service.getUsersByName("foo", 10, 0);
 
+        // Assert
         assertNotNull(result);
         assertTrue(result.isEmpty());
     }
@@ -99,32 +123,56 @@ class UserServiceTest {
     @Test
     @DisplayName("should update an User")
     void updateUser() {
+        // Arrange
         var mockUser = new User("Roger2", "roger2@email.com");
         mockUser.setId(3L);
         when(userRepository.findById(3L)).thenReturn(Optional.of(mockUser));
         when(userRepository.save(mockUser)).thenReturn(mockUser);
 
+        // Act
         var result = service.updateUser(mockUser);
-        assertEquals(mockUser, result);
         var fetched = service.getUserById(mockUser.getId());
+
+        // Assert
+        assertEquals(mockUser, result);
         assertEquals(mockUser, fetched);
     }
 
     @Test
     @DisplayName("should delete an User")
     void deleteUser() {
+        // Arrange
         var mockUser = new User("Test", "test@mail.com");
         when(userRepository.findById(1L)).thenReturn(Optional.of(mockUser));
-        assertTrue(service.deleteUser(1L));
+
+        // Act
+        var result = service.deleteUser(1L);
+
+        // Assert
+        assertTrue(result);
+    }
+
+    @Test
+    @DisplayName("should not delete an user that does not exist")
+    public void deleteUser_ReturnFalse() {
+        // Arrange
         when(userRepository.findById(101L)).thenReturn(Optional.empty());
-        assertFalse(service.deleteUser(101L));
+
+        // Act
+        var result = service.deleteUser(101L);
+
+        // Assert
+        assertFalse(result);
     }
 
     @Test
     @DisplayName("should not allow to repeat email when creating users")
     void createUserFail() {
+        // Arrange
         var newUser = new User("Test", "roger@email.com");
         when(userRepository.findByEmail("roger@email.com")).thenReturn(Optional.of(newUser));
+
+        // Act & Assert
         assertThrows(
                 IllegalArgumentException.class,
                 () -> {

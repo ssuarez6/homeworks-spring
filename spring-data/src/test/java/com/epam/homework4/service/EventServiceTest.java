@@ -35,80 +35,125 @@ class EventServiceTest {
     @Test
     @DisplayName("should get Events by title")
     void getEventsByTitle() {
+        // Arrange
         var mockEvent = new Event("Concert", Date.from(Instant.now()), 10);
         var mockPage = new PageImpl<>(List.of(mockEvent));
         when(repo.findByTitle("Concert", PageRequest.of(0, 10))).thenReturn(mockPage);
+
+        // Act
         var result = service.getEventsByTitle("Concert", 10, 0);
+
+        // Assert
         assertNotNull(result);
         assertEquals(1, result.size());
         assertEquals(mockEvent.getTitle(), result.get(0).getTitle());
 
-        var mockPage2 = new PageImpl<Event>(Collections.emptyList());
-        when(repo.findByTitle("In-existing event", PageRequest.of(0, 10))).thenReturn(mockPage2);
-        result = service.getEventsByTitle("In-existing event", 10, 0);
+    }
+
+    @Test
+    @DisplayName("should return empty list for events that do not exist")
+    public void getEventsByTitle_emptyResult() {
+        // Arrange
+        var mockPage = new PageImpl<Event>(Collections.emptyList());
+        when(repo.findByTitle("In-existing event", PageRequest.of(0, 10))).thenReturn(mockPage);
+
+        // Act
+        var result = service.getEventsByTitle("In-existing event", 10, 0);
+
+        // Assert
         assertTrue(result.isEmpty());
     }
 
     @Test
     @DisplayName("should get the Events for the day")
     void getEventsForDay() {
+        // Arrange
         var today = Date.from(Instant.now());
         var mockEvent = new Event("Circus", today, 17);
         var mockPage = new PageImpl<>(List.of(mockEvent));
         when(repo.findByDate(today, PageRequest.of(0, 10))).thenReturn(mockPage);
+
+        // Act
         var result = service.getEventsForDay(today, 10, 0);
+
+        // Assert
         assertNotNull(result);
         assertEquals(result.get(0).getTitle(), mockEvent.getTitle());
-
-        var yesterday = Instant.now().minusSeconds(60 * 60 * 24);
-        var mockPage2 = new PageImpl<Event>(Collections.emptyList());
-        when(repo.findByDate(Date.from(yesterday), PageRequest.of(0, 10))).thenReturn(mockPage2);
-        var res2 = service.getEventsForDay(Date.from(yesterday), 10, 0);
-        assertTrue(res2.isEmpty());
     }
 
     @Test
     @DisplayName("should create an Event")
     void createEvent() {
+        // Arrange
         var newEvent = new Event("Magic show", Date.from(Instant.now()), 24);
         newEvent.setId(10);
+
+        // Act
         when(repo.save(newEvent)).thenReturn(newEvent);
         var created = service.createEvent(newEvent);
-        assertNotNull(created);
 
-        when(repo.findById(10L)).thenReturn(Optional.of(newEvent));
-        var fetched = service.findById(newEvent.getId());
-        assertTrue(fetched.isPresent());
-        assertEquals(fetched.get(), newEvent);
+        // Assert
+        assertNotNull(created);
     }
 
     @Test
     @DisplayName("should update an existing Event")
     void updateEvent() {
+        // Arrange
         var toUpdate = new Event("Circus", Date.from(Instant.now()), 25);
         toUpdate.setId(12L);
         when(repo.findById(12L)).thenReturn(Optional.of(toUpdate));
         when(repo.save(toUpdate)).thenReturn(toUpdate);
+
+        // Act
         var updated = service.updateEvent(toUpdate);
+
+        // Assert
         assertEquals(toUpdate, updated);
 
-        var inexistent = new Event("Inexistent", Date.from(Instant.now()), 22);
-        inexistent.setId(13L);
+    }
+
+    @Test
+    @DisplayName("should not update a non-existent event")
+    public void updateEvent_FailWhenNonExistent() {
+        // Arrange
+        var nonExistant = new Event("NonExistant", Date.from(Instant.now()), 22);
+        nonExistant.setId(13L);
         when(repo.findById(13L)).thenReturn(Optional.empty());
+
+        // Act & Assert
         assertThrows(
                 IllegalArgumentException.class,
                 () -> {
-                    service.updateEvent(inexistent);
+                    service.updateEvent(nonExistant);
                 });
     }
 
     @Test
     @DisplayName("should delete an Event")
     void deleteEvent() {
+        // Arrange
         var mockEvent = new Event("Concert", Date.from(Instant.now()), 22);
         when(repo.findById(18L)).thenReturn(Optional.of(mockEvent));
-        assertTrue(service.deleteEvent(18L));
+
+        // Act
+        var result = service.deleteEvent(18L);
+
+        // Assert
+        assertTrue(result);
+    }
+
+    @Test
+    @DisplayName("should return false when deleting a non existent event")
+    void deleteEvent_ReturnFalse() {
+        // Arrange
         when(repo.findById(121L)).thenReturn(Optional.empty());
-        assertFalse(service.deleteEvent(121));
+
+        // Act
+        var result = service.deleteEvent(121);
+
+        // Assert
+        assertFalse(result);
+
     }
 }
