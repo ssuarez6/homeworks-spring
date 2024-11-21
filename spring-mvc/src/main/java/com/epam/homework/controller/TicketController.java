@@ -54,7 +54,7 @@ public class TicketController {
         return "tickets";
     }
 
-    @GetMapping("/tickets")
+    @GetMapping("/tickets-by-user")
     public String getBookedTicketsByUser(@RequestParam String userId, Model model) {
         var user = bookingFacade.getUserById(Long.parseLong(userId));
         var bookedTickets = bookingFacade.getBookedTickets(user, 10, 1);
@@ -72,7 +72,7 @@ public class TicketController {
         return new ResponseEntity<>(generateTicketsPDF(bookedTickets, user), headers, HttpStatus.OK);
     }
 
-    @GetMapping("/tickets")
+    @GetMapping("/tickets-by-event")
     public String getBookedTicketsByEvent(@RequestParam String eventId, Model model) {
         var event = bookingFacade.getEventById(Long.parseLong(eventId));
         var bookedTickets = bookingFacade.getBookedTickets(event, 10, 1);

@@ -4,13 +4,13 @@
 </head>
 <body>
 <h2>Search booked tickets by user</h2>
-<form th:action="@{/tickets}" method="post" enctype="multipart/form-data">
+<form th:action="@{/tickets-by-user}" method="post" enctype="multipart/form-data">
     <p>User ID: <input type="text" th:field="*{userId}" required></p>
     <input type="submit" value="Search">
 </form>
 
 <h2>Search booked tickets by event</h2>
-<form th:action="@{/tickets}" method="get" enctype="multipart/form-data">
+<form th:action="@{/tickets-by-event}" method="get" enctype="multipart/form-data">
     <p>User ID: <input type="text" th:field="*{userId}" required></p>
     <button type="submit">Search</button>
 </form>
