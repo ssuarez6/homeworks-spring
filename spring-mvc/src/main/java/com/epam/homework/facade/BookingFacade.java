@@ -36,6 +36,8 @@ public interface BookingFacade {
      */
     List<Event> getEventsForDay(Date day, int pageSize, int pageNum);
 
+    List<Event> getAllEvents();
+
     /**
      * Creates new event. Event id should be auto-generated.
      * @param event Event data.
@@ -79,6 +81,9 @@ public interface BookingFacade {
      */
     List<User> getUsersByName(String name, int pageSize, int pageNum);
 
+    List<User> getAllUsers();
+
+    List<UserAccount> getAllUserAccounts();
     /**
      * Creates new user. User id should be auto-generated.
      * @param user User data.
@@ -140,4 +145,5 @@ public interface BookingFacade {
      */
     boolean cancelTicket(long ticketId);
 
+    void loadTickets(List<Ticket> tickets);
 }

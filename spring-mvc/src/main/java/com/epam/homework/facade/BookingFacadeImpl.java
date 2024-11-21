@@ -75,6 +75,16 @@ public class BookingFacadeImpl implements BookingFacade {
     }
 
     @Override
+    public List<User> getAllUsers()  {
+        return userService.getAllUsers();
+    }
+
+    @Override
+    public List<UserAccount> getAllUserAccounts()  {
+        return userAccountService.getAll();
+    }
+
+    @Override
     public User createUser(User user) {
         return userService.createUser(user);
     }
@@ -113,7 +123,7 @@ public class BookingFacadeImpl implements BookingFacade {
     public UserAccount createOrGetUserAccount(User user) {
         var account = userAccountService.findByUserId(user.getId());
         if(account.isEmpty()) {
-            var newAccount = new UserAccount(user.getId(), 0);
+            var newAccount = new UserAccount(user, 0);
             return userAccountService.save(newAccount);
         } else return account.get();
     }
@@ -126,7 +136,15 @@ public class BookingFacadeImpl implements BookingFacade {
         userAccountService.save(userAccount);
     }
 
+    @Override
     public List<Event> getAllEvents() {
         return eventService.getAll();
+    }
+
+    @Override
+    public void loadTickets(List<Ticket> tickets) {
+        tickets.forEach(ticket -> {
+            bookTicket(ticket.getUserId(), ticket.getEventId(), ticket.getPlace(), ticket.getCategory());
+        });
     }
 }

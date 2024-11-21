@@ -9,15 +9,17 @@ public class UserAccount {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    private long userId;
+    @OneToOne
+    @JoinColumn(name = "userId")
+    private User user;
 
     private double money;
 
     public UserAccount() {
     }
 
-    public UserAccount(long userId, double money) {
-        this.userId = userId;
+    public UserAccount(User user, double money) {
+        this.user = user;
         this.money = money;
     }
 
@@ -29,19 +31,19 @@ public class UserAccount {
         this.id = id;
     }
 
-    public long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
-    }
-
     public double getMoney() {
         return money;
     }
 
     public void setMoney(double money) {
         this.money = money;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

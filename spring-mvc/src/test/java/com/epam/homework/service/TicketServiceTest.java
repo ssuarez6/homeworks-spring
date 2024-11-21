@@ -1,5 +1,6 @@
 package com.epam.homework.service;
 
+import com.epam.homework.model.User;
 import com.epam.homework.repository.TicketRepository;
 import com.epam.homework.model.Event;
 import com.epam.homework.model.Ticket;
@@ -39,9 +40,10 @@ class TicketServiceTest {
     @Test
     @DisplayName("Should book a ticket")
     void bookTicket() {
+        var mockUser = new User("user", "user@mail.com");
         var mockTicket = new Ticket(4L, 1L, Ticket.Category.PREMIUM, 1);
-        var mockUserAccount = new UserAccount(4, 100);
-        var mockUpdatedUserAccount = new UserAccount(4, 50);
+        var mockUserAccount = new UserAccount(mockUser, 100);
+        var mockUpdatedUserAccount = new UserAccount(mockUser, 50);
         var mockEvent = new Event("Circus", Date.from(Instant.now()), 50);
         when(repo.findBookedTicket(1L, 4L, 1, Ticket.Category.PREMIUM)).thenReturn(Optional.empty());
         when(repo.save(any())).thenReturn(mockTicket);
@@ -62,7 +64,8 @@ class TicketServiceTest {
     @Test
     @DisplayName("should not book a ticket if user does not have enough money")
     void bookTicket_failWithInsufficientFunds() {
-        var mockUserAccount = new UserAccount(4, 20);
+        var mockUser = new User("user", "user@mail.com");
+        var mockUserAccount = new UserAccount(mockUser, 20);
         var mockEvent = new Event("Circus", Date.from(Instant.now()), 50);
         when(repo.findBookedTicket(1L, 4L, 1, Ticket.Category.PREMIUM)).thenReturn(Optional.empty());
         when(eventService.findById(4L)).thenReturn(Optional.of(mockEvent));

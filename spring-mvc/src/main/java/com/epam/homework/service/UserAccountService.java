@@ -5,6 +5,7 @@ import com.epam.homework.model.UserAccount;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -30,5 +31,9 @@ public class UserAccountService {
 
     public UserAccount save(UserAccount userAccount) {
         return repo.save(userAccount);
+    }
+
+    public List<UserAccount> getAll() {
+        return repo.findAll();
     }
 }

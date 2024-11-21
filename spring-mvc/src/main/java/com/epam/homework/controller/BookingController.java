@@ -1,13 +1,11 @@
 package com.epam.homework.controller;
 
 import com.epam.homework.facade.BookingFacade;
+import com.epam.homework.model.Ticket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class BookingController {
@@ -21,10 +19,13 @@ public class BookingController {
         return "Healthy";
     }
 
-    @GetMapping("/event/{id}")
-    public String getEventById(@PathVariable long id, Model model) {
-        var event = bookingFacade.getEventById(id);
-        model.addAttribute("event", event);
-        return "event";
+    @PostMapping("/tickets/book")
+    public String bookTicket(@RequestParam String userId, @RequestParam String eventId, @RequestParam String place, @RequestParam String category) {
+        int user = Integer.parseInt(userId);
+        int event = Integer.parseInt(eventId);
+        int placeInt = Integer.parseInt(place);
+        Ticket.Category ticketCategory = Ticket.Category.valueOf(category);
+        bookingFacade.bookTicket(user, event, placeInt, ticketCategory);
+        return "redirect:/tickets?success";
     }
 }
