@@ -1,0 +1,30 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Event Details</title>
+</head>
+<body>
+<h1>Event Details</h1>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Date</th>
+        <th>Ticket Price</th>
+    </tr>
+    <tr th:each="e: ${events}">
+        <td th:text="${e.id}"></td>
+        <td th:text="${e.title}"></td>
+        <td th:text="${e.date}"></td>
+        <td th:text="${e.ticketPrice}"></td>
+    </tr>
+</table>
+
+<h1>Create Event</h1>
+<form th:action="@{/events}" th:object="${event}" method="post">
+    <p>Name: <input type="text" th:field="*{name}" required></p>
+    <p>Date: <input type="text" th:field="*{date}" required></p>
+    <p>Ticket Price: <input type="number" th:field="*{ticketPrice}" required></p>
+    <input type="submit" value="Create Event">
+</form>
+</body>
+</html>

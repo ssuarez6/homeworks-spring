@@ -1,0 +1,36 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Event Details</title>
+</head>
+<body>
+<h1>User Details</h1>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Balance</th>
+    </tr>
+    <tr th:each="u: ${users}">
+        <td th:text="${u.getId()}"></td>
+        <td th:text="${u..getUser().getName()}"></td>
+        <td th:text="${u.getUser().getEmail()}"></td>
+        <td th:text="${u.getMoney()}"></td>
+    </tr>
+</table>
+
+<h1>Register User</h1>
+<form th:action="@{/users}" th:object="${user}" method="post">
+    <p>Name: <input type="text" th:field="*{name}" required></p>
+    <p>Email: <input type="text" th:field="*{email}" required></p>
+    <input type="submit" value="Create Event">
+</form>
+
+<h1>Deposit Money</h1>
+<form th:action="@{/accounts/deposit}" method="post">
+    <p>User ID: <input type="text" name="userId" required></p>
+    <p>Amount: <input type="number" name="amount" required></p>
+    <input type="submit" value="Deposit Money">
+</form>
+</body>
+</html>
